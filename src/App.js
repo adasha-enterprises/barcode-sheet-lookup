@@ -31,26 +31,33 @@ function App() {
 
   useEffect(() => {
     if (!document.getElementById('reader')) return;
-
+  
+    const scanned = new Set(); // In-memory store to prevent fast duplicate reads
+  
     const scanner = new Html5QrcodeScanner('reader', {
       fps: 10,
       qrbox: 250
     });
-
+  
     scanner.render(
       (decodedText) => {
-        setBarcode(decodedText);
-        scanner.clear();
+        if (!scanned.has(decodedText)) {
+          scanned.add(decodedText);
+          setBarcode(decodedText);
+  
+          // Optionally clear after a few seconds to allow rescanning same code
+          setTimeout(() => scanned.delete(decodedText), 3000);
+        }
       },
       (error) => {
-        // console.warn(`Scan error: ${error}`);
+        // Optional: console.warn(`Scan error: ${error}`);
       }
     );
-
+  
     return () => {
-      scanner.clear().catch(console.error);
+      scanner.clear().catch(console.error); // only on component unmount
     };
-  }, []);
+  }, []);  
 
   useEffect(() => {
     if (barcode && items.length > 0) {

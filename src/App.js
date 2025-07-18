@@ -72,13 +72,23 @@ function App() {
 
       <div id="reader" style={{ width: '300px', margin: 'auto' }}></div>
 
-      <input
-        type="text"
-        placeholder="Enter barcode"
-        value={barcode}
-        onChange={e => setBarcode(e.target.value)}
-        style={{ marginTop: '1rem', padding: '0.5rem', width: '200px' }}
-      />
+      <div className="input-wrapper">
+        <input
+          type="text"
+          placeholder="Enter barcode"
+          value={barcode}
+          onChange={e => setBarcode(e.target.value)}
+        />
+        {barcode && (
+          <button
+            type="button"
+            className="clear-button"
+            onClick={() => setBarcode('')}
+          >
+            ×
+          </button>
+        )}
+      </div>
 
       {foundItem ? (
         <div style={{ marginTop: '1.5rem' }}>
